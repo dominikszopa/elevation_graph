@@ -5,26 +5,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 import sys
 
-if len(sys.argv) < 2:
-    print("Usage: python3 elevation.py [gpx_file] [km]")
-    sys.exit(1)
-
-args = sys.argv
-
-# Open the GPX file specified in the first command line argument
-gpx_file = open(args[1], 'r')
-
-# Try to convert the second command line argument to a float
-# and exit with an error message if it is not a number
-try:
-    km_increment = float(sys.argv[2])
-except ValueError:
-    print("Error: km must be a number")
-    sys.exit(1)
-
-# Parse the GPX file using the gpxpy library
-gpx = gpxpy.parse(gpx_file)
-
 
 def add_grade(interval_list, elevation_list, grade_list, colour_dict,
               increment, km_increment, elevation):
@@ -146,7 +126,7 @@ def calculate_grade(gpx, km_increment):
     :param km_increment: distance between intervals
     :return: dictionary of color values to plot the area graph
     """
-    
+
     total_distance = 0              # stores the distance as we go along
     last_point = None               # stores the previous point
     current_increment = 0           # each step of the grade graph
@@ -224,6 +204,26 @@ def calculate_grade(gpx, km_increment):
 
     return colour_dict
 
+
+if len(sys.argv) < 2:
+    print("Usage: python3 elevation.py [gpx_file] [km]")
+    sys.exit(1)
+
+args = sys.argv
+
+# Open the GPX file specified in the first command line argument
+gpx_file = open(args[1], 'r')
+
+# Try to convert the second command line argument to a float
+# and exit with an error message if it is not a number
+try:
+    km_increment = float(sys.argv[2])
+except ValueError:
+    print("Error: km must be a number")
+    sys.exit(1)
+
+# Parse the GPX file using the gpxpy library
+gpx = gpxpy.parse(gpx_file)
 
 colour_dict = calculate_grade(gpx, km_increment)
 
