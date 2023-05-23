@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Elevation and Grade Profile</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        background-color: #0074D9;
+        color: white;
+        margin: 0;
+        padding: 20px;
+      }
+      form {
+        margin: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      input[type="file"] {
+        margin-bottom: 20px;
+      }
+      input[type="submit"] {
+        background-color: #0074D9;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        /* width: 100%; */
+        font-size: 16px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+      input[type="submit"]:hover {
+        background-color: #005CA9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Elevation Profile</h1>
+    <form method="post" enctype="multipart/form-data">
+      <label for="gpx_file">Upload a GPX file:</label>
+      <input type="file" name="gpx_file" id="gpx_file" required><br>
+      <label for="km_increment">Distance Increment (km):</label>
+      <input type="number" name="km_increment" id="km_increment" value="1" required><br>
+      <input type="submit" value="Generate Graph">
+    </form>
+  </body>
+</html>

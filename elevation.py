@@ -64,7 +64,7 @@ def add_grade(interval_list, elevation_list, grade_list, colour_dict,
         grade_list.append(grade)
 
 
-def plot_elevation(interval_list, elevation_list):
+def plot_elevation_graph(interval_list, elevation_list) -> go.Figure:
     """
     Plots a basic elevation graph
 
@@ -74,15 +74,16 @@ def plot_elevation(interval_list, elevation_list):
     chart_data = {'distance': interval_list, 'elevation': elevation_list}
     fig = px.area(chart_data, x="distance", y="elevation")
 
-    # Display the chart
-    fig.show()
+    # Return the chart
+    return fig
 
 
-def plot_grade_graph(colour_dict):
+def plot_grade_graph(colour_dict) -> go.Figure:
     """
     Plots an area graph showing the grade of the route
 
     :param colour_dict: dictionary containing all the colour areas
+    :return: the chart object
     """
 
     # Create a new figure
@@ -114,8 +115,8 @@ def plot_grade_graph(colour_dict):
         fill='tozeroy', line=dict(color='black'),
         name='9+%'))
 
-    # Display the chart
-    fig.show()
+    # Return the chart
+    return fig
 
 
 def calculate_grade(gpx, km_increment):
@@ -205,30 +206,38 @@ def calculate_grade(gpx, km_increment):
     return colour_dict
 
 
-if len(sys.argv) < 2:
-    print("Usage: python3 elevation.py [gpx_file] [km]")
-    sys.exit(1)
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 elevation.py [gpx_file] [km]")
+        sys.exit(1)
 
-args = sys.argv
+    args = sys.argv
 
-# Open the GPX file specified in the first command line argument
-gpx_file = open(args[1], 'r')
+    # Open the GPX file specified in the first command line argument
+    gpx_file = open(args[1], 'r')
 
-# Try to convert the second command line argument to a float
-# and exit with an error message if it is not a number
-try:
-    km_increment = float(sys.argv[2])
-except ValueError:
-    print("Error: km must be a number")
-    sys.exit(1)
+    # Try to convert the second command line argument to a float
+    # and exit with an error message if it is not a number
+    try:
+        km_increment = float(sys.argv[2])
+    except ValueError:
+        print("Error: km must be a number")
+        sys.exit(1)
 
-# Parse the GPX file using the gpxpy library
-gpx = gpxpy.parse(gpx_file)
+    # Parse the GPX file using the gpxpy library
+    gpx = gpxpy.parse(gpx_file)
 
-colour_dict = calculate_grade(gpx, km_increment)
+    colour_dict = calculate_grade(gpx, km_increment)
 
-# Print a basic elevation graph
-# plot_elevation(detailed_distance_list, detailed_elevation_list)
+    # Print a basic elevation graph
+    # chart = plot_elevation(detailed_distance_list, detailed_elevation_list)
 
-# Print a grade graph
-plot_grade_graph(colour_dict)
+    # Print a grade graph
+    chart = plot_grade_graph(colour_dict)
+
+    # Display the chart
+    chart.show()
+
+
+if __name__ == "__main__":
+    main()
