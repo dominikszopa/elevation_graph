@@ -25,31 +25,6 @@ except ValueError:
 # Parse the GPX file using the gpxpy library
 gpx = gpxpy.parse(gpx_file)
 
-total_distance = 0              # stores the distance as we go along
-last_point = None               # stores the previous point
-
-detailed_distance_list = []     # list of distances for every point
-detailed_elevation_list = []    # list of elevations for every point
-
-current_increment = 0           # each step of the grade graph
-
-interval_list = []              # list of distance intervals (for x axis)
-elevation_list = []             # list of elevations (for y axis)
-grade_list = []                 # list of grades (for colour)
-
-colour_dict = {                 # stores area graph values by colour
-    'green_x': [],
-    'green_y': [],
-    'blue_x': [],
-    'blue_y': [],
-    'yellow_x': [],
-    'yellow_y': [],
-    'red_x': [],
-    'red_y': [],
-    'black_x': [],
-    'black_y': []
-}
-
 
 def add_grade(interval_list, elevation_list, grade_list, colour_dict,
               increment, km_increment, elevation):
@@ -163,51 +138,94 @@ def plot_grade_graph(colour_dict):
     fig.show()
 
 
-for track in gpx.tracks:
-    for segment in track.segments:
-        for point in segment.points:
+def calculate_grade(gpx, km_increment):
+    """
+    Calculates the grade of the route
 
-            # print('Point at ({0},{1}) -> {2}'.format(
-            #     point.latitude, point.longitude, point.elevation
-            # ))
+    :param gpx: gpx file
+    :param km_increment: distance between intervals
+    :return: dictionary of color values to plot the area graph
+    """
+    
+    total_distance = 0              # stores the distance as we go along
+    last_point = None               # stores the previous point
+    current_increment = 0           # each step of the grade graph
 
-            if last_point:
+    detailed_distance_list = []     # list of distances for every point
+    detailed_elevation_list = []    # list of elevations for every point
 
-                # Calculate the distance between the points
-                flat_distance = distance.distance(
-                    (last_point.latitude, last_point.longitude),
-                    (point.latitude, point.longitude)
-                ).km
-                # print(flat_distance)
+    interval_list = []              # list of distance intervals (for x axis)
+    elevation_list = []             # list of elevations (for y axis)
+    grade_list = []                 # list of grades (for colour)
 
-                # # Calculate Euclidian distance (include elevation)
-                # euclidian_distance = math.sqrt(flat_distance**2 +
-                #   (last_point.elevation - point.elevation)**2)
-                # print(euclidian_distance)
+    colour_dict = {                 # stores area graph values by colour
+        'green_x': [],
+        'green_y': [],
+        'blue_x': [],
+        'blue_y': [],
+        'yellow_x': [],
+        'yellow_y': [],
+        'red_x': [],
+        'red_y': [],
+        'black_x': [],
+        'black_y': []
+    }
 
-                total_distance += flat_distance
-                # print('{0} {1}'.format(total_distance, point.elevation))
+    for track in gpx.tracks:
+        for segment in track.segments:
+            for point in segment.points:
 
-                # add each point to the detailed distance and elevation lists
-                detailed_distance_list.append(total_distance)
-                detailed_elevation_list.append(round(point.elevation))
+                # print('Point at ({0},{1}) -> {2}'.format(
+                #     point.latitude, point.longitude, point.elevation
+                # ))
 
-                # once we pass the next increment, add the grade
-                if total_distance >= current_increment:
+                if last_point:
+
+                    # Calculate the distance between the points
+                    flat_distance = distance.distance(
+                        (last_point.latitude, last_point.longitude),
+                        (point.latitude, point.longitude)
+                    ).km
+                    # print(flat_distance)
+
+                    # # Calculate Euclidian distance (include elevation)
+                    # euclidian_distance = math.sqrt(flat_distance**2 +
+                    #   (last_point.elevation - point.elevation)**2)
+                    # print(euclidian_distance)
+
+                    total_distance += flat_distance
                     # print('{0} {1}'.format(total_distance, point.elevation))
-                    add_grade(
-                        interval_list,
-                        elevation_list,
-                        grade_list,
-                        colour_dict,
-                        current_increment,
-                        km_increment,
-                        round(point.elevation)
-                    )
-                    current_increment += km_increment
 
-            # store the point for the next iteration
-            last_point = point
+                    # add each point to the detailed distance and elevation
+                    # lists
+                    detailed_distance_list.append(total_distance)
+                    detailed_elevation_list.append(round(point.elevation))
+
+                    # once we pass the next increment, add the grade
+                    if total_distance >= current_increment:
+
+                        # print('{0} {1}'.format(
+                        #   total_distance,
+                        #   point.elevation))
+
+                        add_grade(
+                            interval_list,
+                            elevation_list,
+                            grade_list,
+                            colour_dict,
+                            current_increment,
+                            km_increment,
+                            round(point.elevation)
+                        )
+                        current_increment += km_increment
+
+                # store the point for the next iteration
+                last_point = point
+
+    return colour_dict
+
+
+colour_dict = calculate_grade(gpx, km_increment)
 
 # Print a basic elevation graph
 # plot_elevation(detailed_distance_list, detailed_elevation_list)
