@@ -42,8 +42,16 @@
       }
     </style>
   </head>
+  
   <body>
-    <h1>Elevation Profile</h1>
+    <h1>Elevation and Grade Profile for Cycling</h1>
+
+    <p>I've always liked the coloured graphs that were used in the Tour de France to show the elevation and grade of the route.</p>
+    <p>I wanted to create something similar for my own rides. I couldn't find anything that did exactly what I wanted, <br>
+    so I created this tool to generate the graphs, such as this one for Mont Ventoux from Bédoin:</p>
+    <img src="{{ url_for('static', filename='img/ventoux-grade.png')}}" alt="Mont Ventoux Grade Profile" width="800">
+
+    <p>Create your own from any .gpx file that has elevation information:</p>
     <form method="post" enctype="multipart/form-data">
       <label for="gpx_file">Upload a GPX file:</label>
       <input type="file" name="gpx_file" id="gpx_file" required><br>

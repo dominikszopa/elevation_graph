@@ -4,7 +4,7 @@ Create a coloured graph of the grade of segments of a GPX track for cycling.
 
 I've always liked the coloured elevation graphs that they use in cycling grand tours (like the Tour de France) to show how hard different parts of a climb are.
 
-![Mont Ventoux Grade Graph](ventoux-grade.png)
+![Mont Ventoux Grade Graph](static/img/ventoux-grade.png)
 
 I couldn't find an easy way to generate these, so I created this program.
 
