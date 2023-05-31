@@ -8,6 +8,8 @@ I've always liked the coloured elevation graphs that they use in cycling grand t
 
 I couldn't find an easy way to generate these, so I created this program.
 
+Live demo available at: <https://elevation-graph.techdomi.com/>
+
 ## Installation
 
 1. Install python 3.x
