@@ -1,9 +1,12 @@
+import sys
+import math
+
 import gpxpy
 import gpxpy.gpx
+
 from geopy import distance
 import plotly.graph_objects as go
 import plotly.express as px
-import sys
 
 
 def add_grade(interval_list, elevation_list, grade_list, colour_dict,
@@ -78,7 +81,7 @@ def plot_elevation_graph(interval_list, elevation_list) -> go.Figure:
     return fig
 
 
-def plot_grade_graph(colour_dict) -> go.Figure:
+def plot_grade_graph(colour_dict, distance) -> go.Figure:
     """
     Plots an area graph showing the grade of the route
 
@@ -115,11 +118,12 @@ def plot_grade_graph(colour_dict) -> go.Figure:
         fill='tozeroy', line=dict(color='black'),
         name='9+%'))
 
+    # Add 10 markers along the x axis
     fig.update_layout(
         xaxis=dict(
             tickmode='linear',
             tick0=0,
-            dtick=25,
+            dtick=math.floor(distance / 10),
             tickfont=dict(size=20),
         ),
         yaxis=dict(
@@ -215,7 +219,7 @@ def calculate_grade(gpx, km_increment):
                 # store the point for the next iteration
                 last_point = point
 
-    return colour_dict
+    return colour_dict, total_distance
 
 
 def main():
@@ -244,13 +248,13 @@ def main():
     # Parse the GPX file using the gpxpy library
     gpx = gpxpy.parse(gpx_file)
 
-    colour_dict = calculate_grade(gpx, km_increment)
+    colour_dict, distance = calculate_grade(gpx, km_increment)
 
     # Print a basic elevation graph
     # chart = plot_elevation(detailed_distance_list, detailed_elevation_list)
 
     # Print a grade graph
-    chart = plot_grade_graph(colour_dict)
+    chart = plot_grade_graph(colour_dict, distance)
 
     # Display the chart
     chart.show()
