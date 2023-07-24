@@ -115,6 +115,18 @@ def plot_grade_graph(colour_dict) -> go.Figure:
         fill='tozeroy', line=dict(color='black'),
         name='9+%'))
 
+    fig.update_layout(
+        xaxis=dict(
+            tickmode='linear',
+            tick0=0,
+            dtick=25,
+            tickfont=dict(size=20),
+        ),
+        yaxis=dict(
+            tickfont=dict(size=20),
+        ),
+    )
+
     # Return the chart
     return fig
 
@@ -216,13 +228,18 @@ def main():
     # Open the GPX file specified in the first command line argument
     gpx_file = open(args[1], 'r')
 
-    # Try to convert the second command line argument to a float
+    # If there is no second argument, assume the value 1, then
+    # try to convert the second command line argument to a float
     # and exit with an error message if it is not a number
-    try:
-        km_increment = float(sys.argv[2])
-    except ValueError:
-        print("Error: km must be a number")
-        sys.exit(1)
+
+    if len(sys.argv) < 3:
+        km_increment = 1
+    else:
+        try:
+            km_increment = float(sys.argv[2])
+        except ValueError:
+            print("Error: km must be a number")
+            sys.exit(1)
 
     # Parse the GPX file using the gpxpy library
     gpx = gpxpy.parse(gpx_file)
