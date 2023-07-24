@@ -26,9 +26,9 @@ def index():
         gpx = gpxpy.parse(gpx_contents)
 
         # Calculate the grade and plot the graph
-        colour_dict = calculate_grade(gpx, km_increment)
+        colour_dict, distance = calculate_grade(gpx, km_increment)
 
-        fig = plot_grade_graph(colour_dict)
+        fig = plot_grade_graph(colour_dict, distance)
 
         return fig.to_html(full_html=False)
 
